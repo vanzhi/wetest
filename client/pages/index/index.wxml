@@ -1,3 +1,16 @@
 <!--pages/index/index.wxml-->
-<map>
-</map>
+<view class="map_container">
+  <map class="map" id="map" scale="14" show-location="true" bindmarkertap="makertap"></map>
+</view>
+ <view class="map_text">
+  <text class="h1">{{location.latitude}}</text>
+  <text class="h1">{{location.longitude}}</text>
+  <text class="h1">{{location.altitude}}</text>
+  <text class="h1">{{location.speed}}</text>
+</view>  
+<view class='test-button'>
+  <button bindtap='bindTapHandler'>打印信息</button>
+</view>
+ <!-- <view class="img_box">
+  <image src="{{src}}" />
+</view>  -->
