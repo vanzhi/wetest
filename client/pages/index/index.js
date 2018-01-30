@@ -1,6 +1,8 @@
 // pages/index/index.js
-const amapFile  = require('../../vendor/map/amap-wx.js');
-const appKey = '94b3cd2660907f6b605dc7e36c4bc115';
+// const amapFile  = require('../../vendor/map/amap-wx.js');
+const appKey_gd = '94b3cd2660907f6b605dc7e36c4bc115'     // 高德 used
+const appKey_tx = 'MXQBZ-2FDWD-SCQ47-HQ3XJ-UFPVO-EPBVJ'  // 腾讯
+
 var markersData = [];
 
 Page({
@@ -8,74 +10,73 @@ Page({
    * 页面的初始数据
    */
   data: {
+    amap: null,
+    userInfo: null,
     markers: [],
-    latitude: '',
-    longitude: '',
-    textData: {},
-    location: {}
+    controls: [],
+    scale: 14,
+    location: {
+      longitude: 0,   // 经度
+      latitude: 0,    // 纬度
+      speed: 0,       // 速度
+      altitude: 0     // 高度
+    },
+    src: ''
   },
-  makertap (e) {
-    var id = e.markerId;
-    var that = this;
-    that.showMarkerInfo(markersData, id);
-    that.changeMarkerColor(markersData, id);
+  regionchange: function() {
+    
   },
-  showMarkerInfo (data, i) {
-    var that = this;
-    that.setData({
-      textData: {
-        name: data[i].name,
-        desc: data[i].address
-      }
-    });
-  },
-  changeMarkerColor (data, i) {
-    var that = this;
-    var markers = [];
-    for (var j = 0; j < data.length; j++) {
-      if (j == i) {
-        data[j].iconPath = "选中 marker 图标的相对路径"; //如：..­/..­/img/marker_checked.png
-      } else {
-        data[j].iconPath = "未选中 marker 图标的相对路径"; //如：..­/..­/img/marker.png
-      }
-      markers.push(data[j]);
-    }
-    that.setData({
-      markers: markers
-    });
-  },
-  getLoaction() {
+  setLocation() {
     wx.getLocation({
       type: 'wgs84',
       altitude: true,
-      success: ({ latitude, longitude, altitude, speed }) => {
+      success: (data) => {
+        let { longitude, latitude, speed, altitude } = data
         this.setData({
-          location: { latitude, longitude, altitude, speed }
+          location: { longitude, latitude, speed, altitude }
         })
       },
-      error: () => {
+      fail: () => {
+
+      }
+    })
+  },
+  setPoint() {
+    wx.getSystemInfo({
+      success: (data) => {
+        var height = data.windowHeight;
+        var width = data.windowWidth;
         
       }
     })
   },
-  bindTapHandler(e) {
-    this.getLoaction()
+  setUserInfo() {
+    wx.getUserInfo({
+      withCredentials: true,
+      success: (data) => {
+        this.userInfo = data.userInfo
+        console.log(data.userInfo)
+      },
+      fail: () => {
+        
+      }
+    })
   },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    var that = this;
-    var myAmapFun = new amapFile.AMapWX({ key: appKey });
+    this.setLocation();
+    this.setPoint();
+    this.setUserInfo();
+    // this.amap = new amapFile.AMapWX({ key: appKey_gd });
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    wx.onUserCaptureScreen(function (res) {
-      console.log('用户截屏了')
-    })
+    
   },
 
   /**

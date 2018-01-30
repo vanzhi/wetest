@@ -1,16 +1,16 @@
-<!--pages/index/index.wxml-->
-<view class="map_container">
-  <map class="map" id="map" scale="14" show-location="true" bindmarkertap="makertap"></map>
+<view class="map-container">
+  <map 
+    class="map" id="map"
+    show-location="{{false}}"
+    scale="{{scale}}"
+    controls="{{controls}}"
+    longitude="{{location.longitude}}" 
+    latitude="{{location.latitude}}" 
+    bindregionchange="regionchange">
+  </map>
 </view>
- <view class="map_text">
-  <text class="h1">{{location.latitude}}</text>
-  <text class="h1">{{location.longitude}}</text>
-  <text class="h1">{{location.altitude}}</text>
-  <text class="h1">{{location.speed}}</text>
-</view>  
-<view class='test-button'>
-  <button bindtap='bindTapHandler'>打印信息</button>
-</view>
- <!-- <view class="img_box">
-  <image src="{{src}}" />
-</view>  -->
+<cover-view class="cover-on-map">
+  <cover-view class="map"></cover-view>
+  <cover-image src="/resources/user.jpg" class="user-logo"></cover-image>
+  <cover-image src="/resources/hana.png" class="user-frame"></cover-image>
+</cover-view>
