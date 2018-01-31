@@ -1,16 +1,19 @@
 <view class="map-container">
   <map 
-    class="map" id="map"
-    show-location="{{false}}"
-    scale="{{scale}}"
-    controls="{{controls}}"
+    class="map" id="map" 
+    show-location="{{false}}" 
+    scale="{{scale}}" 
+    controls="{{controls}}" 
+    markers="{{markers}}" 
     longitude="{{location.longitude}}" 
     latitude="{{location.latitude}}" 
     bindregionchange="regionchange">
   </map>
 </view>
 <cover-view class="cover-on-map">
-  <cover-view class="map"></cover-view>
   <cover-image src="/resources/user.jpg" class="user-logo"></cover-image>
   <cover-image src="/resources/hana.png" class="user-frame"></cover-image>
+</cover-view>
+<cover-view class="cover-on-test" bindtap="nextStep">
+  下一步
 </cover-view>

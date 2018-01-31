@@ -2,15 +2,14 @@
 // const amapFile  = require('../../vendor/map/amap-wx.js');
 const appKey_gd = '94b3cd2660907f6b605dc7e36c4bc115'     // 高德 used
 const appKey_tx = 'MXQBZ-2FDWD-SCQ47-HQ3XJ-UFPVO-EPBVJ'  // 腾讯
-
-var markersData = [];
+const end = 'end'
 
 Page({
   /**
    * 页面的初始数据
    */
   data: {
-    amap: null,
+    mapCtx: null,
     userInfo: null,
     markers: [],
     controls: [],
@@ -21,26 +20,56 @@ Page({
       speed: 0,       // 速度
       altitude: 0     // 高度
     },
-    src: ''
+    src: '',
+    regiontest: ''
   },
-  regionchange: function() {
-    
+  // markers封装
+  setMarkers(data) {
+    let points = data instanceof Array ? data : [data]
+    let markers = points.map((item, index) => {
+      return {
+        ...item,
+        id: index,
+        iconPath: '/resources/cao.png'
+      }
+    })
+    this.setData({ markers })
   },
+  // 下一步
+  nextStep() {
+    let markers = this.data.markers.map((item, index) => {
+      return `${item.longitude},${item.latitude}`
+    })
+    wx.navigateTo({
+      url: '../staticMap/staticMap?markers=' + [markers].join(';')
+    })
+  },
+  // 监听地图拖动事件
+  regionchange: function(e) {
+    if (e.type === end) {
+      this.mapCtx.getCenterLocation({
+        success: (data) => {
+          let { longitude, latitude } = data
+          this.setMarkers({ longitude, latitude })
+        }
+      })
+    }
+  },
+  // 设置地理信息
   setLocation() {
     wx.getLocation({
-      type: 'wgs84',
+      type: 'gcj02',
       altitude: true,
       success: (data) => {
         let { longitude, latitude, speed, altitude } = data
         this.setData({
-          location: { longitude, latitude, speed, altitude }
+          location: { longitude, latitude, speed, altitude },
         })
-      },
-      fail: () => {
-
+        this.setMarkers({ latitude, longitude })
       }
     })
   },
+  // 设置画面中心的标记
   setPoint() {
     wx.getSystemInfo({
       success: (data) => {
@@ -50,6 +79,7 @@ Page({
       }
     })
   },
+  // 获取用户信息保存
   setUserInfo() {
     wx.getUserInfo({
       withCredentials: true,
@@ -66,6 +96,8 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    // 创建map上下文
+    this.mapCtx = wx.createMapContext('map')
     this.setLocation();
     this.setPoint();
     this.setUserInfo();

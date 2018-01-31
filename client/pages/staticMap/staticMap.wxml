@@ -1,3 +1,4 @@
-<view>
-  <image src="{{src}}"></image>
+<view class="img-box">
+  <!-- <image src="{{src}}"></image>  -->
+  <canvas canvas-id="myCanvas" />
 </view>
